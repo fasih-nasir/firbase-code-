@@ -8,3 +8,39 @@ service cloud.firestore {
     }
   }
 }
+<!--Get A Docs In Order And real time data   -->
+const q = query(collection(db, "blogg"), orderBy("time", "desc"))
+
+// const querySnapshot = await getDocs(q);
+
+
+// const unsub = onSnapshot(doc(db, "blogg"), (doc) => {
+//     console.log("Current data: ", doc.data());
+// });
+
+
+var main=document.getElementById("main")
+onSnapshot(q,((querySnapshot) => {
+    main.innerHTML=``
+
+  // doc.data() is never undefined for query doc snapshots
+  querySnapshot.forEach((doc) => {
+    
+  
+main.innerHTML+=`
+ <div class="box d-flex flex-column">
+ <div class="d-flex justify-content-between">
+   <div class="d-flex align-items-center ">
+    <h3> ${doc.data().name}</h3>
+    <span class="px-2">${doc.data().time}</span>
+</div>
+    <div>
+        <button class="ed" data-id="">Edit</button>
+        <button class="de" data-id="">del</button>
+    </div>
+ </div>
+    <p>${doc.data().msg}</p>
+</div>
+
+`
+})}));
