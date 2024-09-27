@@ -1,4 +1,6 @@
+-----------------------------------------------------------------
 <!--Uncaught (in promise) FirebaseError: Missing or insufficient permissions.  -->
+-----------------------------------------------------------------
 rules_version = '2';
 
 service cloud.firestore {
@@ -8,7 +10,9 @@ service cloud.firestore {
     }
   }
 }
+-----------------------------------------------------------------
 <!--Get A Docs In Order And real time data   -->
+-----------------------------------------------------------------
 const q = query(collection(db, "blogg"), orderBy("time", "desc"))
 
 // const querySnapshot = await getDocs(q);
@@ -45,7 +49,9 @@ main.innerHTML+=`
 `
 })}));
 
+-----------------------------------------------------------------
 <!--Cloud Stoage Security Rules  -->
+-----------------------------------------------------------------
 
 rules_version = '2';
 service firebase.storage {
@@ -56,4 +62,34 @@ service firebase.storage {
   }
 }
 
+-----------------------------------------------------------------
+<!-- Upload a img in firebase using react -->
+-----------------------------------------------------------------
+const [image, setImage] = useState(null);
+<input type="file" onChange={(e)=>{setimg(e.target.files[0])}} />
+function uploadImg(){
 
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${img.name}`);
+    
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    
+   
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+     
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+       
+      }, 
+      (error) => {
+        console.log(error);
+        
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+        });
+      }
+    );
+}
