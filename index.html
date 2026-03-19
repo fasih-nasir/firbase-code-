@@ -11,6 +11,23 @@ service cloud.firestore {
   }
 }
 -----------------------------------------------------------------
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /apply_now/{docId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /blog/{docId} {
+      allow read: if true; // public read
+      allow write: if request.auth != null; // sirf logged-in
+    }
+
+  }
+}
+-----------------------------------------------------------------
 <!--Get A Docs In Order And real time data   -->
 -----------------------------------------------------------------
 const q = query(collection(db, "blogg"), orderBy("time", "desc"))
